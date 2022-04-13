@@ -1,0 +1,41 @@
+# cus our goal is to build and deploy container
+name: deploy-container
+
+# on which event we want to run this workflow
+# we are gonna watch on push event only on the branch of master
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/container/**"
+      # paths: we want to run this workflow when we make a change specificly
+      # on container folder
+
+# this gonna set execution enviroment to inside of our container directory
+defaults:
+  run:
+    working-directory: packages/container
+
+# we can have mutilple different jobs and they will run all by default all in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # we say to github that we want a linux based virtual machine
+
+    steps:
+      # build steps
+      # checkout our code and loading it into virtual machine
+      - uses: actions/checkout@v2
+      - run: npm install
+      - run: npm run build
+
+      # deploy steps after build
+      # 1. get access to the aws-cli
+      - uses: shinyinc/action-aws-cli@v1.2
+      # via cli we gonna reach out to S3 feature to sink our distribution(dist) directory that is
+      # created when we build our project with S3 bucket, S3 is place where we can store files on AWS
+      - run: aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/container/latest
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

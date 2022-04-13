@@ -7,10 +7,10 @@ on:
   push:
     branches:
       - main
-      paths:
-        - 'packages/container/**'
-         # paths: we want to run this workflow when we make a change specificly
-         # on container folder
+    paths:
+      - "packages/container/**"
+      # paths: we want to run this workflow when we make a change specificly
+      # on container folder
 
 # this gonna set execution enviroment to inside of our container directory
 defaults:
@@ -20,7 +20,7 @@ defaults:
 # we can have mutilple different jobs and they will run all by default all in parallel
 jobs:
   build:
-    # we say to github that we want a linux based virtual machine 
+    # we say to github that we want a linux based virtual machine
     runs-on: ubuntu-latest
 
     steps:
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm install
       - run: npm run build
-      
+
       # deploy steps after build
       # 1. get access to the aws-cli
       - uses: shinyinc/action-aws-cli@v1.2
@@ -39,4 +39,3 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-

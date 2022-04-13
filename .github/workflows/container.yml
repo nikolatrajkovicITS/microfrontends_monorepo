@@ -20,8 +20,8 @@ defaults:
 # we can have mutilple different jobs and they will run all by default all in parallel
 jobs:
   build:
-    # we say to github that we want a linux based virtual machine
     runs-on: ubuntu-latest
+    # we say to github that we want a linux based virtual machine
 
     steps:
       # build steps

@@ -7,10 +7,10 @@ on:
   push:
     branches:
       - main
-      # we want to run this workflow when we make a change specificly
-      # on container folder
       paths: 
         - 'packages/container/**'
+         # paths: we want to run this workflow when we make a change specificly
+         # on container folder
 
 # this gonna set execution enviroment to inside of our container directory
 defaults: 

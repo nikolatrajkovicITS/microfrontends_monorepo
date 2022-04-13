@@ -3,7 +3,7 @@ name: deploy-container
 
 # on which event we want to run this workflow
 # we are gonna watch on push event only on the branch of master
-on: 
+on:
   push:
     branches:
       - main

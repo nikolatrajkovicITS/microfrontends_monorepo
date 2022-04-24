@@ -14,6 +14,7 @@ const prodConfig = {
   output: {
     // done for cashing issues? (template for naming files?)
     filename: "[name].[contenthash].js",
+    publicPath: "/container/latest/", // "/container/latest/[name].[contenthash].js"
   },
   plugins: [
     new WebpackModuleFederationPlugin({

@@ -1,5 +1,5 @@
-# cus our goal is to build and deploy container
-name: deploy-container
+# cus our goal is to build and deploy marketing
+name: deploy-marketing
 
 # on which event we want to run this workflow
 # we are gonna watch on push event only on the branch of master
@@ -8,14 +8,14 @@ on:
     branches:
       - main
     paths:
-      - "packages/container/**"
+      - "packages/marketing/**"
       # paths: we want to run this workflow when we make a change specificly
-      # on container folder
+      # on marketing folder
 
-# this gonna set execution enviroment to inside of our container directory
+# this gonna set execution enviroment to inside of our marketing directory
 defaults:
   run:
-    working-directory: packages/container
+    working-directory: packages/marketing
 
 # we can have mutilple different jobs and they will run all by default all in parallel
 jobs:
@@ -29,21 +29,19 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm install
       - run: npm run build
-        env:
-          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
 
       # deploy steps after build
       # 1. get access to the aws-cli
       - uses: shinyinc/action-aws-cli@v1.2
       # via cli we gonna reach out to S3 feature to sink our distribution(dist) directory that is
       # created when we build our project with S3 bucket, S3 is place where we can store files on AWS
-      - run: aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/container/latest
+      - run: aws s3 sync dist s3://${{ secrets.AWS_S3_BUCKET_NAME }}/marketing/latest
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
 
-      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID}} --paths "/container/latest/index.html"
+      - run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID}} --paths "/marketing/latest/remoteEntry.js"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
